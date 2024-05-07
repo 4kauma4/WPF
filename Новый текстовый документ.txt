@@ -1,0 +1,125 @@
+CREATE TABLE Role
+(
+Id INT PRIMARY KEY,
+Name NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Client
+(
+Id INT PRIMARY KEY,
+Name NVARCHAR(100) NOT NULL,
+Login NVARCHAR(50) NOT NULL,
+Password NVARCHAR(50) NOT NULL
+);
+
+CREATE TABLE PickupPoints
+(
+Id INT PRIMARY KEY,
+Address NVARCHAR(255) NOT NULL,
+Phone NVARCHAR(20) NOT NULL
+);
+
+CREATE TABLE Employes
+(
+Id INT PRIMARY KEY,
+Name NVARCHAR(100) NOT NULL,
+Login NVARCHAR(50) NOT NULL,
+Password NVARCHAR(50) NOT NULL,
+Salary DECIMAL(18, 2) NOT NULL,
+Position NVARCHAR(100) NOT NULL,
+PickupPointId INT, 
+FOREIGN KEY (PickupPointId) REFERENCES PickupPoints(Id)
+);
+
+CREATE TABLE Orders
+(
+Id INT PRIMARY KEY,
+PickupPointId INT NOT NULL, 
+ClientId INT NOT NULL, 
+Date DATETIME NOT NULL,
+FOREIGN KEY (PickupPointId) REFERENCES PickupPoints(Id),
+FOREIGN KEY (ClientId) REFERENCES Client(Id)
+);
+
+CREATE TABLE Products
+(
+Id INT PRIMARY KEY,
+Title NVARCHAR(255) NOT NULL,
+Price DECIMAL(18, 2) NOT NULL,
+Kollichestvo NVARCHAR(50) NOT NULL,
+Rating DECIMAL(5, 2) NOT NULL
+);
+
+CREATE TABLE Orders_Details
+(
+Id INT PRIMARY KEY,
+ProductId INT NOT NULL, 
+OrderId INT NOT NULL, 
+FOREIGN KEY (ProductId) REFERENCES Products(Id),
+FOREIGN KEY (OrderId) REFERENCES Orders(Id)
+);
+
+CREATE TABLE Sellers
+(
+Id INT PRIMARY KEY,
+Title NVARCHAR(255) NOT NULL,
+Rating DECIMAL(5, 2) NOT NULL,
+Address NVARCHAR(255) NOT NULL
+);
+
+CREATE TABLE Sellers_Products
+(
+Id INT PRIMARY KEY,
+ProductId INT NOT NULL,
+SellerId INT NOT NULL, 
+FOREIGN KEY (ProductId) REFERENCES Products(Id),
+FOREIGN KEY (SellerId) REFERENCES Sellers(Id)
+);
+
+INSERT INTO Client (Id, Name, Login, Password)
+VALUES (1, 'Иван Петров', 'ivan_petrov', 'пароль123'),
+(2, 'Мария Сидорова', 'maria_sidorova', 'безопасныйпароль'),
+(3, 'Алексей Иванов', 'alex_ivanov', 'секретныйпароль');
+
+
+INSERT INTO PickupPoints (Id, Address, Phone)
+VALUES (1, 'ул. Ленина, д. 123, Город', '+1234567890'),
+(2, 'пр. Победы, д. 456, Другой город', '+0987654321');
+
+INSERT INTO Employes (Id, Name, Login, Password, Salary, Position, PickupPointId)
+VALUES (1, 'Анна Иванова', 'anna_ivanova', 'сотрудник123', 50000.00, 'Менеджер', 1),
+(2, 'Петр Смирнов', 'peter_smirnov', 'работник456', 40000.00, 'Продавец', 2);
+
+
+INSERT INTO Orders (Id, PickupPointId, ClientId, Date)
+VALUES (1, 1, 1, '2024-05-06 10:00:00'),
+(2, 2, 2, '2024-05-07 12:30:00');
+
+
+INSERT INTO Products (Id, Title, Price, Kollichestvo, Rating)
+VALUES (1, 'Ноутбук ASUS', 45000.00, 'В наличии', 4.5),
+(2, 'Смартфон Samsung', 25000.00, 'В наличии', 4.2),
+(3, 'Наушники Sony', 5000.00, 'Ограниченное количество', 4.0);
+
+
+INSERT INTO Orders_Details (Id, ProductId, OrderId)
+VALUES (1, 1, 1),
+(2, 2, 1),
+(3, 3, 2);
+
+
+INSERT INTO Role (Id, Name)
+VALUES (1, 'Администратор'),
+(2, 'Менеджер'),
+(3, 'Продавец');
+
+
+INSERT INTO Sellers (Id, Title, Rating, Address)
+VALUES (1, 'ООО "ТехноМаркет"', 4.8, 'ул. Советская, д. 10, Город'),
+(2, 'ИП Иванов', 4.2, 'пр. Ленина, д. 25, Другой город');
+
+
+INSERT INTO Sellers_Products (Id, ProductId, SellerId)
+VALUES (1, 1, 1),
+(2, 2, 1),
+(3, 3, 2);
